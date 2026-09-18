@@ -1,2 +1,9 @@
+# cjpm
+/build-script-cache
 /target
-.cache
+
+# LSP
+/.cache
+
+# Third party artifacts
+/third_party

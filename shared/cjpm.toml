@@ -6,13 +6,18 @@ description = "nothing here"
 version = "1.0.0"
 target-dir = ""
 script-dir = ""
-output-type = "dynamic"
-compile-option = ""
+output-type = "static"
+compile-option = "-Woff unused"
 override-compile-option = ""
 link-option = ""
-package-configuration = {}
+
+[package.package-configuration."tsn.ios.usecase"]
+compile-option = "--objc-interop-output-dir=./native/generated"
 
 [dependencies]
 
 [profile]
 experimental = true
+
+[target.aarch64-apple-ios-simulator.bin-dependencies]
+path-option = ["third_party/objc"]
