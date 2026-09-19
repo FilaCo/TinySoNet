@@ -4,7 +4,7 @@ set -euo pipefail
 source ./scripts/utils.sh
 
 package_xc_framework() {
-    
+    printf "not implemented\n"
 }
 
 package_platform_artifact() {
