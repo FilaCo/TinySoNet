@@ -1,0 +1,10 @@
+closure-depth = 0
+
+[sources.foundation]
+paths = ["@SDK@/System/Library/Frameworks/Foundation.framework/Headers/Foundation.h"]
+arguments = ["-target", "@CLANG_TRIPLE@", "-isysroot", "@SDK@", "-I", "@RES_DIR@/include"]
+
+[[packages]]
+package-name = "tsn.objc.foundation"
+filters = { include = ["NS.*"] }
+output-path = "@OUTPUT_PATH@"

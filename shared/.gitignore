@@ -2,8 +2,7 @@
 /build-script-cache
 /target
 
-# LSP
-/.cache
+.cache
 
-# Third party artifacts
-/third_party
+# Generated source files
+generated

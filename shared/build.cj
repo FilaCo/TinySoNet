@@ -1,39 +1,25 @@
-import std.env.getVariable
 import std.process.execute
-import std.fs.{exists, Directory, Path, removeIfExists}
+import std.fs.Path
 
-main(args: Array<String>) {
-    let stage = args[0]
-    match (stage) {
+main(args: Array<String>): Int64 {
+    match (args[0]) {
         case "pre-build" => onPreBuild()
-        case "pre-clean" => onPreClean()
-        case _ => ()
+        case "post-build" => onPostBuild()
+        case _ => 0
     }
 }
 
-func onPreBuild(): Unit {
-    makeThirdParty()
+let SCRIPTS_DIR = Path("scripts")
+
+@When[target == "aarch64-apple-ios-simulator"]
+let TARGET_TRIPLE = "aarch64-apple-ios-simulator"
+@When[target == "aarch64-apple-darwin"]
+let TARGET_TRIPLE = "aarch64-apple-darwin"
+
+func onPreBuild(): Int64 {
+    execute("bash", [SCRIPTS_DIR.join("pre-build.sh").toString(), TARGET_TRIPLE])
 }
 
-func onPreClean(): Unit {
-    cleanThirdParty()
-}
-
-let THIRD_PARTY_PATH = Path("third_party")
-let THIRD_PARTY_OBJC_PATH = THIRD_PARTY_PATH.join("objc")
-
-func makeThirdParty(): Unit {
-    makeDirectoryIfNotExists(THIRD_PARTY_OBJC_PATH, recursive: true)
-}
-
-func cleanThirdParty(): Unit {
-    removeIfExists(THIRD_PARTY_PATH, recursive: true)
-}
-
-func makeDirectoryIfNotExists(path: Path, recursive!: Bool = false) {
-    if (exists(path)) {
-        return
-    }
-
-    Directory.create(path, recursive: recursive)
+func onPostBuild(): Int64 {
+    execute("bash", [SCRIPTS_DIR.join("post-build.sh").toString(), TARGET_TRIPLE])
 }

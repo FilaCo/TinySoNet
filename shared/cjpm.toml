@@ -11,13 +11,16 @@ compile-option = "-Woff unused"
 override-compile-option = ""
 link-option = ""
 
-[package.package-configuration."tsn.ios.usecase"]
-compile-option = "--objc-interop-output-dir=./native/generated"
+[package.package-configuration."tsn.objc.usecase"]
+# compile-option = "--objc-interop-output-dir=${ENV_TEST}"
 
 [dependencies]
 
 [profile]
 experimental = true
 
-[target.aarch64-apple-ios-simulator.bin-dependencies]
-path-option = ["third_party/objc"]
+[target.aarch64-apple-ios-simulator.debug.bin-dependencies]
+path-option = ["target/aarch64-apple-ios-simulator/debug/objc"]
+
+[target.aarch64-apple-ios-simulator.release.bin-dependencies]
+path-option = ["target/aarch64-apple-ios-simulator/release/objc"]

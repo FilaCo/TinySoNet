@@ -1,9 +1,0 @@
-[output-roots.default]
-path = "./src"
-
-[sources.default]
-arguments = ["-DTARGET_OS_IPHONE"]
-
-[[packages]]
-package-name = "tsn.ios.foundation"
-filters = { include = ["NS.*"] }
