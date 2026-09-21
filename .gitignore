@@ -1,6 +1,9 @@
 # cjpm
-/build-script-cache
+build-script-cache
 /target
+
+# Generated source files
+generated
 
 # Cangjie LSPServer
 .cache

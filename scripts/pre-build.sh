@@ -10,9 +10,10 @@ copy_objc_libs_for_profile() {
     local cangjie_modules_dir
     cangjie_modules_dir="$(cangjie_modules_dir_for "$1")"
     local target_dir
-    target_dir="$MODULE_ROOT/target/$1/$2/objc"
+    target_dir="$WORKSPACE_ROOT/target/$1/$2/objc"
 
     # The directory has to exist whichever target is being built
+    printf "$target_dir\n"
     mkdir -p "$target_dir"
     cp "$cangjie_modules_dir"/objc.* "$target_dir/"
 }
@@ -59,7 +60,7 @@ generate_objc_mirrors_for_os() {
         -e "s|@EXTRA_ARGS@|$(objc_extra_clang_args_for "$target")|g" \
         -e "s|@PACKAGE@|$OBJC_MIRRORS_PACKAGE.$(objc_mirror_package_for "$1")|g" \
         -e "s|@OUTPUT_PATH@|$2|g" \
-        "$MODULE_ROOT/ObjCInteropGen.toml.in" > "$3"
+        "$WORKSPACE_ROOT/ObjCInteropGen.toml.in" > "$3"
 
     local rc=0
     ObjCInteropGen "$3" 2>&1 | grep -vE "unsupported feature" || rc="${PIPESTATUS[0]}"
@@ -128,15 +129,14 @@ drop_host_package_output() {
 
     local profile
     for profile in "${BUILD_PROFILES[@]}"; do
-        rm -rf "$MODULE_ROOT/target/$profile/tsn"
+        rm -rf "$WORKSPACE_ROOT/target/$profile/tsn"
     done
 }
 
 main() {
-    mark_build_started
     drop_host_package_output "$1"
     copy_libs
-    generate_mirrors "$@"
+    generate_mirrors "$1"
 }
 
 main "$@"

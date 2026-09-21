@@ -12,21 +12,6 @@ override-compile-option = ""
 link-option = ""
 
 [package.package-configuration."tsn.objc.usecase"]
-compile-option = "--objc-interop-output-dir=native/objc/generated"
+compile-option = "--objc-interop-output-dir=shared/native/objc/generated"
 
 [dependencies]
-
-[profile]
-experimental = true
-
-[target.aarch64-apple-ios-simulator.debug.bin-dependencies]
-path-option = ["target/aarch64-apple-ios-simulator/debug/objc"]
-
-[target.aarch64-apple-ios-simulator.release.bin-dependencies]
-path-option = ["target/aarch64-apple-ios-simulator/release/objc"]
-
-[target.aarch64-apple-darwin.debug.bin-dependencies]
-path-option = ["target/aarch64-apple-darwin/debug/objc"]
-
-[target.aarch64-apple-darwin.release.bin-dependencies]
-path-option = ["target/aarch64-apple-darwin/release/objc"]

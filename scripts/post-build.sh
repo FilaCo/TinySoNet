@@ -49,16 +49,17 @@ compile_objc_glue() {
 # $1 - target triple
 # $2 - profile
 build_kit_slice() {
-    local output_dir
-    output_dir="$(cjpm_output_dir_for "$1" "$2")"
-    local slice_dir="$output_dir/$KIT_NAME"
+    local package_dir
+    package_dir="$(package_output_dir_for "$1" "$2")"
+    local slice_dir
+    slice_dir="$(kit_slice_dir_for "$1" "$2")"
 
     rm -rf "$slice_dir"
     mkdir -p "$slice_dir/Headers" "$slice_dir/obj"
 
     compile_objc_glue "$1" "$2" "$slice_dir/obj"
 
-    local -a members=("$output_dir/tsn"/*.a "$slice_dir/obj"/*.o)
+    local -a members=("$package_dir/tsn"/*.a "$slice_dir/obj"/*.o)
     if [ "$BUNDLE_RUNTIME" = 1 ]; then
         # cjinterop.o carries initCJRuntime, which the generated +initialize
         # calls; cjstart.o and section.o are what a static Cangjie image starts from.
@@ -108,22 +109,11 @@ create_xc_framework() {
     local -a slices=()
     local target slice
     for target in "${SUPPORTED_TARGETS[@]}"; do
-        slice="$(cjpm_output_dir_for "$target" "$1")/$KIT_NAME"
+        slice="$(kit_slice_dir_for "$target" "$1")"
         if [ ! -d "$slice" ]; then
             continue
         fi
-        # Only this build's target was just compiled; the rest are whatever an
-        # earlier build left behind. One that predates the current sources would
-        # ship objects built from code that has since changed, so it is dropped
-        # rather than packed under a fresh name. The note below reaches only
-        # cjpm's script-log, so the signal that carries is the xcframework
-        # itself: it holds the slices that are current and no others.
-        if kit_slice_is_current "$slice/lib$KIT_NAME.a"; then
-            slices+=("$slice")
-        else
-            printf '%s: %s slice is older than the sources, leaving it out; build that target to include it\n' \
-                "$KIT_NAME" "$target" >&2
-        fi
+        slices+=("$slice")
     done
     [ "${#slices[@]}" -gt 0 ] || return 0
 
@@ -148,15 +138,8 @@ create_xc_framework() {
 # $1 - target triple
 # $2 - profile
 package_xc_framework_for_profile() {
-    local output_dir
-    output_dir="$(cjpm_output_dir_for "$1" "$2")"
-
-    # Skipping the profile this run did not build matters: the glue on disk
-    # belongs to this compilation, and pairing it with the other profile's older
-    # archive builds a slice whose halves disagree — something libtool cannot
-    # see and only an application link would ever catch.
-    [ -d "$output_dir/tsn" ] || return 0
-    built_in_this_run "$output_dir/tsn" || return 0
+    local package_dir
+    package_dir="$(package_output_dir_for "$1" "$2")"
 
     build_kit_slice "$1" "$2"
     create_xc_framework "$2"

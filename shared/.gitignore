@@ -6,5 +6,4 @@
 .cache
 
 # Generated source files
-generated
 /src/objc/foundation
