@@ -7,7 +7,7 @@ version = "1.0.0"
 target-dir = ""
 script-dir = ""
 output-type = "static"
-compile-option = "-Woff unused"
+compile-option = ""
 override-compile-option = ""
 link-option = ""
 

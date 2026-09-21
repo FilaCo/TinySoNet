@@ -1,0 +1,11 @@
+[workspace]
+members = ["shared"]
+build-members = []
+test-members = []
+compile-option = "-Woff unused"
+override-compile-option = ""
+link-option = ""
+target-dir = ""
+script-dir = ""
+
+[dependencies]

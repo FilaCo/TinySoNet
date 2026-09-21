@@ -6,5 +6,5 @@ arguments = ["-target", "@CLANG_TRIPLE@", "-isysroot", "@SDK@", "-I", "@RES_DIR@
 
 [[packages]]
 package-name = "@PACKAGE@"
-filters = { include = [@INCLUDE@] }
+filters = { include = ["NSObject|NSString|NSUUID"] }
 output-path = "@OUTPUT_PATH@"

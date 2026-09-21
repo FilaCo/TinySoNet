@@ -58,7 +58,6 @@ generate_objc_mirrors_for_os() {
         -e "s|@CLANG_TRIPLE@|$(clang_target_triple_for "$target")|g" \
         -e "s|@EXTRA_ARGS@|$(objc_extra_clang_args_for "$target")|g" \
         -e "s|@PACKAGE@|$OBJC_MIRRORS_PACKAGE.$(objc_mirror_package_for "$1")|g" \
-        -e "s|@INCLUDE@|$(objc_mirror_include_list)|g" \
         -e "s|@OUTPUT_PATH@|$2|g" \
         "$MODULE_ROOT/ObjCInteropGen.toml.in" > "$3"
 

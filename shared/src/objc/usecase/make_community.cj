@@ -1,7 +1,7 @@
 package tsn.objc.usecase
 
 import objc.lang.*
-import tsn.objc.foundation.NSObject
+import tsn.objc.foundation.{NSObject, NSUUID}
 import tsn.shared.app.usecase.MakeCommunity as MakeCommunityImpl
 
 @ObjCImpl["TSNMakeCommunityUsecase"]
@@ -12,7 +12,9 @@ class MakeCommunity <: NSObject {
         impl = MakeCommunityImpl()
     }
 
-    public func perform(): Unit {
-        impl.perform()
+    public func perform(peerId: NSUUID): Unit {
+        var peerIdBytes = VArray<Byte, $16>(repeat: 0)
+        peerId.getUUIDBytes(ObjCPointer(CPointer<Unit>(inout peerIdBytes)))
+        impl.perform(peerIdBytes)
     }
 }

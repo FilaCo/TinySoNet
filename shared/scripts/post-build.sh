@@ -74,8 +74,8 @@ build_kit_slice() {
             esac
             members+=("$archive")
         done
-        members+=("$cangjie_lib_dir/cjstart.o"
-                  "$cangjie_lib_dir/section.o"
+        members+=("$cangjie_lib_dir/section.o"
+                  "$cangjie_lib_dir/cjstart.o"
                   "$cangjie_lib_dir/cjinterop.o")
     fi
     # Some of the runtime archives are fat; -arch_only keeps the artifact honest
@@ -87,6 +87,17 @@ build_kit_slice() {
     cp "$OBJC_GEN_DIR"/*.h "$OBJC_SUPPORT_DIR"/*.h "$slice_dir/Headers/"
     cp "$OBJC_SUPPORT_DIR/module.modulemap" "$slice_dir/Headers/"
     write_umbrella_header "$slice_dir/Headers"
+}
+
+# The Xcode project names one fixed path and cannot choose between the profiles,
+# so what the app links is whichever profile was packaged last. Building the kit
+# for the profile the app is about to be built against is therefore part of the
+# app's build, not something the project can decide for itself.
+# $1 - the xcframework to publish
+publish_kit() {
+    mkdir -p "$APPLE_KIT_DIR"
+    rm -rf "$APPLE_KIT_DIR/$KIT_NAME.xcframework"
+    cp -R "$1" "$APPLE_KIT_DIR/"
 }
 
 # An xcframework carries the slices of every triple at once, so it is rebuilt
@@ -130,6 +141,7 @@ create_xc_framework() {
         rm -rf "${slice%/*}/$KIT_NAME.xcframework"
         cp -R "$staging/$KIT_NAME.xcframework" "${slice%/*}/"
     done
+    publish_kit "$staging/$KIT_NAME.xcframework"
     rm -rf "$staging"
 }
 

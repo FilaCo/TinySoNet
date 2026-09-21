@@ -79,6 +79,12 @@ MACOS_MIN_VERSION="${TSN_BUILD_MACOS_MIN_VERSION:-14.0}"
 # Must match the module name in native/objc/support/module.modulemap.
 KIT_NAME="TinySoNetKit"
 
+# Where the Apple app links the kit from. Inside the build tree the xcframework
+# sits under a path that spells out the triple and the profile, and an Xcode file
+# reference cannot follow that, so the finished kit is published to one fixed
+# place next to the app project.
+APPLE_KIT_DIR="${TSN_BUILD_APPLE_KIT_DIR:-$MODULE_ROOT/../appleApp/Frameworks}"
+
 # Where cjc writes the ObjC half of @ObjCImpl. cjpm.toml names the same path in
 # --objc-interop-output-dirю
 OBJC_GEN_DIR="$MODULE_ROOT/native/objc/generated"
@@ -176,21 +182,6 @@ objc_extra_clang_args_for() {
     else
         echo ""
     fi
-}
-
-# Foundation is mirrored through an explicit allow-list rather than a pattern.
-# Every name here is one more file the package compiles, and closure-depth 0
-# drops whatever members the list cannot satisfy, so a mirror stays self
-# contained. Need another Foundation type? Add it here and rebuild.
-OBJC_MIRRORED_TYPES=(NSObject)
-
-# The allow-list spelled the way ObjCInteropGen's `include` filter wants it.
-objc_mirror_include_list() {
-    local list="" name
-    for name in "${OBJC_MIRRORED_TYPES[@]}"; do
-        list="${list:+$list, }\"$name\""
-    done
-    printf '%s' "$list"
 }
 
 arch_for() {
