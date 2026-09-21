@@ -15,6 +15,7 @@
 | [01-threat-model.md](design/01-threat-model.md) | противники и гарантии |
 | [02-objects.md](design/02-objects.md) | объект, конверт, синхронизация |
 | [03-keys.md](design/03-keys.md) | ключи, эпохи, коммиты, сведение форков |
+| [04-membership.md](design/04-membership.md) | кто член: голоса, кворум, закрытие заявок, устройства |
 
 ## Идентификаторы
 
